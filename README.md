@@ -45,7 +45,7 @@ Useful, efficient and super simple to use.
 ### Usage / Example :
 
 ```python
-from marmiton import Marmiton
+from marmiton import Marmiton, RecipeNotFound
 
 # Search :
 query_options = {
@@ -61,7 +61,12 @@ query_result = Marmiton.search(query_options)
 recipe = query_result[0]
 main_recipe_url = recipe['url']
 
-detailed_recipe = Marmiton.get(main_recipe_url)  # Get the details of the first returned recipe (most relevant in our case)
+try:
+	detailed_recipe = Marmiton.get(main_recipe_url)  # Get the details of the first returned recipe (most relevant in our case)
+except RecipeNotFound as e:
+    print(f"No recipe found for '{query_options['aqt']}'")
+	import sys
+	sys.exit(0)
 
 # Display result :
 print("## %s\n" % detailed_recipe['name'])  # Name of the recipe

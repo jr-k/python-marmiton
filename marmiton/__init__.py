@@ -7,6 +7,8 @@ import urllib.request
 
 import re
 
+class RecipeNotFound(Exception):
+	pass
 
 class Marmiton(object):
 
@@ -71,7 +73,11 @@ class Marmiton(object):
 		base_url = "http://www.marmiton.org/"
 		url = base_url + uri
 
-		html_content = urllib.request.urlopen(url).read()
+		try:
+			html_content = urllib.request.urlopen(url).read()
+		except urllib.error.HTTPError as e:
+			raise RecipeNotFound if e.code == 404 else e
+
 		soup = BeautifulSoup(html_content, 'html.parser')
 
 		main_data = soup.find("div", {"class": "m_content_recette_main"})
